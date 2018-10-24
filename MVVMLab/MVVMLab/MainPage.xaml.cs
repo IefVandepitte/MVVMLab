@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVVMLab.dummydata;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,29 @@ namespace MVVMLab
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private List<Movie> movies = DummyDataSource.Movies;
+
         public MainPage()
         {
             this.InitializeComponent();
+            
+            moviesListView.ItemsSource = movies;
+            moviesListView.Width = Window.Current.CoreWindow.Bounds.Width -200;
+            moviesListView.Height = Window.Current.CoreWindow.Bounds.Height -200;
+        }
+
+        private void addbutton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(NewMoviePage));
+
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e != null && e.Parameter.GetType() == typeof(Movie)) {
+                movies.Add(e.Parameter as Movie);
+                moviesListView.InvalidateArrange();
+            }
         }
     }
 }
